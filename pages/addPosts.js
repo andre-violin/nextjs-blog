@@ -25,20 +25,19 @@ export default function addPosts() {
       toast.error("Preencha todos os campos!");
       return
     }
-
+    // APENAS PARA QUEM ESTA USANDO O STRAPI
     const data = {
       data: { ...values }
     }
 
     const response = await axios.post("http://localhost:1337/api/posts", data)
 
-    console.log(response);
 
     if (!response.statusText === "OK") {
       toast.error("Erro ao adicionar post!");
     } else {
-      const post = await response.data.data
-      console.log('post', post.id);
+      // const post = await response.data.data
+      // console.log('post', post.id);
       router.push('/')
     }
   };
@@ -47,7 +46,9 @@ export default function addPosts() {
     const { id, value } = e.target;
     setValues({ ...values, [id]: value });
   };
+
   const { title, date, body } = values;
+
   return (
     <Layout>
       <Link href="/">

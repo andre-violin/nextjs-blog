@@ -17,9 +17,8 @@ import utilStyles from '../styles/utils.module.css'
 
 // EXEMPLO COM CONTEÚDO DE POSTS DE UMA API EXTERNA
 export const getStaticProps = async () => {
-  const response = await axios.get('http://localhost:1337/api/posts')
-  console.log(response);
-  const allPostsData = await response.data.data
+  const response = await axios.get('http://localhost:5000/posts')
+  const allPostsData = await response.data
   return {
     props: {
       allPostsData
@@ -41,17 +40,22 @@ export default function Home({ allPostsData }) {
             <a>Adicionar Post</a>
           </Link>
         </p>
+        <p>
+          <Link href="/categories/categories">
+            <a>Categorias</a>
+          </Link>
+        </p>
       </section>
       <section className={`${utilStyles.headingMD} ${utilStyles.padding1px}`}>
         <h2 className={utilStyles.headingLg}>Blog</h2>
         <ul className={utilStyles.list}>
-          {allPostsData.map(({ id, attributes }) => (
+          {allPostsData.map(({ id, categoria_id, titulo, conteudo}) => (
             <li className={utilStyles.listItem} key={id}>
-              {attributes.title}
-              <br />
-              {id}
-              <br />
-              {attributes.date}
+              <p>{categoria_id}</p>
+              <Link href="/posts/1">
+                <a>{titulo}</a>
+              </Link>
+              <div>{conteudo}</div>
             </li>
           ))}
         </ul>
