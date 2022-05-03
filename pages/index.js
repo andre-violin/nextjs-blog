@@ -2,20 +2,8 @@ import axios from 'axios'
 import Head from 'next/head'
 import Link from 'next/link'
 import Layout from '../components/layout'
-// import { getSortedPostsData } from '../lib/posts'
 import utilStyles from '../styles/utils.module.css'
 
-// EXEMPLO COM CONTEÚDO DE POSTS LOCAL
-// export async function getStaticProps() {
-//   const allPostsData = getSortedPostsData()
-//   return {
-//     props: {
-//       allPostsData
-//     }
-//   }
-// }
-
-// EXEMPLO COM CONTEÚDO DE POSTS DE UMA API EXTERNA
 export const getStaticProps = async () => {
   const response = await axios.get('http://localhost:5000/posts')
   const allPostsData = await response.data
@@ -36,13 +24,18 @@ export default function Home({ allPostsData }) {
       <section className={utilStyles.headingMd}>
         <p>André Violin</p>
         <p>
-          <Link href="/addPosts">
+          <Link href="/posts/add">
             <a>Adicionar Post</a>
           </Link>
         </p>
         <p>
           <Link href="/categories/categories">
             <a>Categorias</a>
+          </Link>
+        </p>
+        <p>
+          <Link href="/categories/add">
+            <a>Adicionar Categorias</a>
           </Link>
         </p>
       </section>

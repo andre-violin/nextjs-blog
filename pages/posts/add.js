@@ -4,14 +4,25 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Layout from "../components/layout";
+import Layout from "../../components/layout";
 
 
-export default function addPosts() {
+export const getStaticProps = async () => {
+  const response = await axios.get('http://localhost:5000/categorias')
+  const categorias = await response.data
+  return {
+    props: {
+      categorias
+    }
+  }
+}
+
+export default function Add({ categorias }) {
   const [values, setValues] = useState({
-    title: "",
-    date: "",
-    body: "",
+    categoria_id: "",
+    titulo: "",
+    data: "",
+    conteudo: "",
   });
 
   let router = useRouter();
@@ -25,19 +36,16 @@ export default function addPosts() {
       toast.error("Preencha todos os campos!");
       return
     }
-    // APENAS PARA QUEM ESTA USANDO O STRAPI
     const data = {
-      data: { ...values }
+      ...values
     }
 
-    const response = await axios.post("http://localhost:1337/api/posts", data)
+    const response = await axios.post("http://localhost:5000/posts/inserir", data)
 
 
     if (!response.statusText === "OK") {
       toast.error("Erro ao adicionar post!");
     } else {
-      // const post = await response.data.data
-      // console.log('post', post.id);
       router.push('/')
     }
   };
@@ -47,7 +55,7 @@ export default function addPosts() {
     setValues({ ...values, [id]: value });
   };
 
-  const { title, date, body } = values;
+  const { categoria_id, titulo, data, conteudo } = values;
 
   return (
     <Layout>
@@ -58,29 +66,41 @@ export default function addPosts() {
       <ToastContainer />
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="title">Título</label>
+          <label htmlFor="categoria_id">Categoria</label>
+          <select
+            id="categoria_id"
+            value={categoria_id}
+            onChange={handleInputChange}
+          >
+            {categorias.map(({ id, nome }) => (
+              <option key={id} value={id}>{nome}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="titulo">Título</label>
           <input
-            id="title"
+            id="titulo"
             type="text"
-            value={title}
+            value={titulo}
             onChange={handleInputChange}
           />
         </div>
         <div>
-          <label htmlFor="date">Data</label>
+          <label htmlFor="data">Data</label>
           <input
-            id="date"
+            id="data"
             type="date"
-            value={date}
+            value={data}
             onChange={handleInputChange}
           />
         </div>
         <div>
-          <label htmlFor="body">Conteúdo</label>
+          <label htmlFor="conteudo">Conteúdo</label>
           <textarea
-            id="body"
+            id="conteudo"
             type="text"
-            value={body}
+            value={conteudo}
             onChange={handleInputChange}
           />
         </div>
